@@ -12,13 +12,16 @@ const userSchema = new schema({
     type: String,
     required: false,
   },
-  avatar: {
-    type: String,
+  admin:{
+    type: Boolean,
+    required:false,
+    default:false
   },
   date: {
     type: Date,
     default: Date.now,
   },
+ 
 });
 
 

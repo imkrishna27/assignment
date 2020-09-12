@@ -1,3 +1,4 @@
 /node_modules
-config/default.json
-config/dev.js
+config
+/routes/api/authRoutes.js
+/services

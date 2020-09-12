@@ -30,7 +30,7 @@ router.post(
 
     //take values from body
 
-    const { name, email, password } = req.body;
+    const { name, email, password,admin } = req.body;
 
     try {
       //see if user exists
@@ -50,13 +50,12 @@ router.post(
 
       //declare avatar as null
 
-      const avatar = null;
-
       user = new User({
         name,
-        avatar,
         email,
         password,
+        admin
+        
       });
       //encrypt user password
       const salt = await bcrypt.genSalt(10);
