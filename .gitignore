@@ -2,3 +2,4 @@
 /config
 /routes/api/authRoutes.js
 /services
+package-lock.json
