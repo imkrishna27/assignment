@@ -30,7 +30,7 @@ router.post(
 
     //take values from body
 
-    const { name, email, password,admin } = req.body;
+    const { name, email, password, admin } = req.body;
 
     try {
       //see if user exists
@@ -54,8 +54,7 @@ router.post(
         name,
         email,
         password,
-        admin
-        
+        admin,
       });
       //encrypt user password
       const salt = await bcrypt.genSalt(10);
@@ -73,7 +72,7 @@ router.post(
         payload,
         config.get('jwtToken'),
         {
-          expiresIn: 360000,
+          expiresIn: 300000,
         },
         (err, token) => {
           if (err) throw err;

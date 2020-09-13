@@ -17,7 +17,6 @@ const topicSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users',
       },
-
       title: {
         type: String,
         required: true,

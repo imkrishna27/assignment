@@ -59,6 +59,7 @@ router.post(
 );
 
 //adding article for topic
+//@put request
 
 router.put(
   '/article',
@@ -121,4 +122,63 @@ router.put(
     }
   }
 );
+
+//fetching all articles
+
+router.get('/all', auth, async (req, res) => {
+  try {
+    const topics = await Topic.find().sort({ date: -1 });
+    res.json(topics);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+//fetching topic by id
+router.get('/:id', auth, async (req, res) => {
+  try {
+    const topic = await Topic.findById(req.params.id);
+
+    if (!topic) {
+      return res.status(404).json({
+        msg: 'No Topic',
+      });
+    }
+    res.json(topic);
+  } catch (err) {
+    if (err.kind == 'ObjectId') {
+      return res.status(404).json({
+        msg: 'No Topic',
+      });
+    }
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+router.get('/article/:id/:article_id', auth, async (req, res) => {
+  try {
+    const topic = await Topic.findById(req.params.id);
+
+    //pull article
+
+    const article = topic.article.find((ar) => ar.id === req.params.article_id);
+
+    //make sure comment exist
+    if (!article) {
+      return res.status(404).json({
+        msg: 'Article doesnt exist',
+      });
+    }
+
+    console.log(article);
+
+    res.json(article);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
