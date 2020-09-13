@@ -13,8 +13,6 @@ const { route } = require('./users');
 // @desc TEST route
 // @access Public
 
-
-
 router.get('/', auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
@@ -33,7 +31,7 @@ router.post(
   '/',
   [
     check('email', 'Enter valid E-mail').isEmail(),
-    check('password', 'Password Required').exists()
+    check('password', 'Password Required').exists(),
     // check('admin','Error').isBoolean()
   ],
   async (req, res) => {
@@ -45,15 +43,18 @@ router.post(
     const { email, password, admin } = req.body;
     try {
       const user = await User.findOne({ email });
-      // console.log(user);
-      const isAdmin = user.admin;
-      // console.log(isAdmin)
-      if(isAdmin !== admin){
-        return res.status(400).json({errors:[{msg:'invalid'}]});
-      }
-      
+
       if (!user) {
         return res.status(400).json({ errors: [{ msg: ' Wrong Email' }] });
+      }
+      console.log(user);
+      const isAdmin = user.admin;
+      // console.log(isAdmin)
+
+      if (isAdmin !== admin) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'Invalid Credentials' }] });
       }
 
       const match = await bcrypt.compare(password, user.password);
@@ -68,7 +69,6 @@ router.post(
       //   return res.json({'message':'logged as user'});
       // }
 
-
       const payload = { user: { id: user.id } };
       jwt.sign(
         payload,
@@ -76,14 +76,11 @@ router.post(
         { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err;
-          if(isAdmin==true){
-            res.json({'token':token,
-              'msg':'logged in as admin'})
-          }else{
-            res.json({'token':token,
-              'msg':'logged in as user'})
+          if (isAdmin == true) {
+            res.json({ token: token, msg: 'logged in as admin' });
+          } else {
+            res.json({ token: token, msg: 'logged in as user' });
           }
-         
         }
       );
     } catch (err) {
